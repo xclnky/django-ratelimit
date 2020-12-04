@@ -94,7 +94,7 @@ def _get_window(value, period):
         return ts
     if not isinstance(value, bytes):
         value = value.encode('utf-8')
-    w = ts - (ts % period) + (zlib.crc32(value) % period)
+    w = ts - (ts % period) + (zlib.crc32(value) % 100)
     if w < ts:
         return w + period
     return w
