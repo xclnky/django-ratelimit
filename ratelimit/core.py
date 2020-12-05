@@ -124,7 +124,7 @@ def is_ratelimited(request, group=None, fn=None, key=None, rate=None,
 
 
 def get_usage(request, group=None, fn=None, key=None, rate=None, method=ALL,
-              increment=False):
+              increment=False, clear=False):
     if group is None and fn is None:
         raise ImproperlyConfigured('get_usage must be called with either '
                                    '`group` or `fn` arguments')
@@ -203,6 +203,15 @@ def get_usage(request, group=None, fn=None, key=None, rate=None, method=ALL,
                 # unavailable or (somehow) the key doesn't exist. redis, on the
                 # other hand, simply returns None.
                 count = cache.incr(cache_key)
+            except ValueError:
+                pass
+        elif clear:
+            try:
+                # python3-memcached will throw a ValueError if the server is
+                # unavailable or (somehow) the key doesn't exist. redis, on the
+                # other hand, simply returns None.
+                cache.set(cache_key, 0)
+                count = 0
             except ValueError:
                 pass
         else:
