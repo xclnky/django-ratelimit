@@ -210,7 +210,7 @@ def get_usage(request, group=None, fn=None, key=None, rate=None, method=ALL,
                 # python3-memcached will throw a ValueError if the server is
                 # unavailable or (somehow) the key doesn't exist. redis, on the
                 # other hand, simply returns None.
-                cache.set(cache_key, 0)
+                cache.delete(cache_key)
                 count = 0
             except ValueError:
                 pass
