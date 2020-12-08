@@ -124,7 +124,7 @@ def is_ratelimited(request, group=None, fn=None, key=None, rate=None,
 
 
 def get_usage(request, group=None, fn=None, key=None, rate=None, method=ALL,
-              increment=False, clear=False):
+              increment=False, clear=False, user_id=None):
     if group is None and fn is None:
         raise ImproperlyConfigured('get_usage must be called with either '
                                    '`group` or `fn` arguments')
@@ -184,6 +184,9 @@ def get_usage(request, group=None, fn=None, key=None, rate=None, method=ALL,
     else:
         raise ImproperlyConfigured(
             'Could not understand ratelimit key: %s' % key)
+
+    if user_id is not None:
+        value = str(user_id)
 
     window = _get_window(value, period)
     initial_value = 1 if increment else 0
